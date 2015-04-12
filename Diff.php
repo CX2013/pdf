@@ -11,6 +11,10 @@ class Differ {
      */
     const TABLE_INIT_VAL = 0;
 
+    /**
+     * 文本中行分隔符
+     */
+    const PREG_LINE_SPLIT = '#(\r\n|\n|\r)#';
 
     //记录两个模板的相同的行和不同的行
     var $table = array();
@@ -24,30 +28,16 @@ class Differ {
     var $right_len = 0;
 
     function __construct($left, $right) {
-        //将模板按回车符或者换行符分割放入数组
-        $this->left  = preg_split('/(\r\n|\n|\r)/', $left);
-        $this->right = preg_split('/(\r\n|\n|\r)/', $right);
+        //将文件中的内容行分隔符进行分割
+        $this->left  = preg_split(self::PREG_LINE_SPLIT, $left);
+        $this->right = preg_split(self::PREG_LINE_SPLIT, $right);
         //模板行数
         $this->left_len  = count($this->left);
         $this->right_len = count($this->right);
     }
 
     /**
-     * 模板比较类构造函数，传入两个模板的内容
-     * @param $left
-     * @param $right
-     */
-    function Diff($left, $right) {
-        //将模板按回车符或者换行符分割放入数组
-        $this->left  = preg_split('/(\r\n|\n|\r)/', $left);
-        $this->right = preg_split('/(\r\n|\n|\r)/', $right);
-        //模板行数
-        $this->left_len  = count($this->left);
-        $this->right_len = count($this->right);
-    }
-
-    /**
-     * 将0|1|0|0|1|0|样式的字符传拆分生键和值的数组形式，起始下标是-1
+     * 将0|1|0|0|1|0|样式的字符串 拆分生键和值的数组形式，起始下标是-1
      * @param string $row
      * @return array
      */
@@ -80,15 +70,11 @@ class Differ {
 
      */
     function fetch_diff() {
-        $prev_row     = array();
         $prev_row     = array_pad(array(), $this->right_len, self::TABLE_INIT_VAL);
         $prev_row[-1] = self::TABLE_INIT_VAL;
-//        for ($i = -1; $i < $this->right_len; $i++) {
-//            $prev_row[$i] = 0;
-//        }
         for ($i = 0; $i < $this->left_len; $i++) {
             $this_row        = array(
-                '-1' => 0
+                '-1' => self::TABLE_INIT_VAL,
             );
             $data_left_value = $this->left[$i];
             for ($j = 0; $j < $this->right_len; $j++) {
@@ -200,11 +186,11 @@ class Differ {
  * Class Diff_Entry
  */
 class Diff_Entry {
-    private $a;
-    private $b;
+    private $left;
+    private $right;
 
     function  Diff_Entry($a, $b) {
-        $this->a = $a;
-        $this->b = $b;
+        $this->left  = $a;
+        $this->right = $b;
     }
 }
