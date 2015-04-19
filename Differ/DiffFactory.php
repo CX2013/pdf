@@ -24,21 +24,11 @@ class DiffFactory {
 
     /**
      * 根据文件名称，通过工厂创建合适的Differ实现类
-     * @param string $leftFile 左文件名
-     * @param string $rightFile 右文件名
+     * $parm string $ext 文件类型
      * @return bool|IFileDiffer 工厂创建失败返回false，否则返回实例类名
      */
-    public static function getDiffer($leftFile, $rightFile) {
-        $leftExt  = FileUtil::getExtenson($leftFile);
-        $rightExt = FileUtil::getExtenson($rightFile);
-        //扩展名不同
-        if ($leftExt !== $rightExt) {
-            printf(self::ERROR_MSG_WRONG_EXT);
-
-            return false;
-        }
-        switch ($leftExt) {
-            //json
+    public static function getDiffer($ext) {
+        switch (strtolower($ext)) {//json
             case self::EXTENSON_SUPPORT_JSON:
                 return new JsonDiffer();
                 break;
