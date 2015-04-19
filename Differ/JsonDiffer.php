@@ -1,16 +1,13 @@
 <?php
 require_once("IFileDiffer.php");
 require_once(__DIR__ . "/../Util/FileUtil.php");
+require_once(__DIR__ . "/../Util/DiffUtil.php");
+require_once(__DIR__ . "/../const.php");
 
 /**
  * 处理json文件的diff
  */
 class JsonDiffer implements IFileDiffer {
-
-    /**
-     * 错误信息：文件不存在
-     */
-    const FILE_NOT_EXISTS_MSG = "FILE %s NOT EXIST\n";
 
     /**
      * 错误信息，json文件格式错误
@@ -38,29 +35,30 @@ class JsonDiffer implements IFileDiffer {
 
 
     /**
-     * @var left 文件名
+     * @var string left文件名
      */
     private $leftFile;
     /**
-     * @var right 文件名
+     * @var string right文件名
      */
     private $rightFile;
 
     /**
-     * @var 左文件解析后的json array
+     * @var  array 左文件解析后的json
      */
     private $leftJson;
     /**
-     * @var 右文件解析后的json array
+     * @var  array 右文件解析后的json
      */
     private $rightJson;
 
     /**
-     * @var diff后的结果
+     * @var
      * array(
      * 'diffadd'=>array(),
      * 'diffrmv'=>array(),
      * )
+     * 右文件解析后的json
      */
     private $diffResult;
     /**
@@ -77,7 +75,7 @@ class JsonDiffer implements IFileDiffer {
     private function  fileToArray($fileName, &$jsonArray) {
         $jsonArray = array();
         if (!file_exists($fileName)) {
-            $this->onError(sprintf(self::FILE_NOT_EXISTS_MSG, $fileName));
+            $this->onError(sprintf(FILE_NOT_EXISTS_MSG, $fileName));
             $this->isError = true;
 
             return;
@@ -124,7 +122,7 @@ class JsonDiffer implements IFileDiffer {
         $result .= sprintf(self::RESULT_MSG_LINE_COUNT, count($this->leftJson), count($this->rightJson));
 
         foreach ($this->diffResult as $lineIndex => $diffInfo) {
-            $result .= sprintf(self::RESULT_MSG_SUMMARY, count($diffInfo['diffadd']) + count($diffInfo['diffrmv']), $lineIndex);
+            $result .= sprintf(self::RESULT_MSG_SUMMARY, $diffInfo['diffaddcount'] + $diffInfo['diffrmvcount'], $lineIndex);
             if (!empty($diffInfo['diffadd'])) {
                 $result .= sprintf(self::RESULT_MSG_DIFF_ADD, $lineIndex);
                 $result .= json_encode($diffInfo['diffadd']) . "\n";
@@ -143,20 +141,23 @@ class JsonDiffer implements IFileDiffer {
      * @return mixed
      */
     function  handleDiff() {
-        //计算你的最大行数
+        //计算最大行数
         $maxLineCount = max(count($this->leftJson), count($this->rightJson));
         for ($lineIndex = 1; $lineIndex <= $maxLineCount; $lineIndex++) {
-            $left    = empty($this->leftJson[$lineIndex]) ? array() : $this->leftJson[$lineIndex];
-            $right   = empty($this->rightJson[$lineIndex]) ? array() : $this->rightJson[$lineIndex];
-            $diffRmv = array_diff($left, $right);
-            $diffAdd = array_diff($right, $left);
+            $left     = empty($this->leftJson[$lineIndex]) ? array() : $this->leftJson[$lineIndex];
+            $right    = empty($this->rightJson[$lineIndex]) ? array() : $this->rightJson[$lineIndex];
+            $rmvCount = 0;
+            $addCount = 0;
+            $diffRmv  = DiffUtil::arrayDiffMulti($right, $left, $rmvCount);
+            $diffAdd  = DiffUtil::arrayDiffMulti($left, $right, $addCount);
             if (!(empty($diffAdd) && empty($diffRmv))) {
-                $this->diffResult[$lineIndex]['diffadd'] = $diffAdd;
-                $this->diffResult[$lineIndex]['diffrmv'] = $diffRmv;
+                $this->diffResult[$lineIndex]['diffadd']      = $diffAdd;
+                $this->diffResult[$lineIndex]['diffaddcount'] = $addCount;
+                $this->diffResult[$lineIndex]['diffrmv']      = $diffRmv;
+                $this->diffResult[$lineIndex]['diffrmvcount'] = $rmvCount;
             }
         }
     }
-
 
     function  isError() {
         return $this->isError;

@@ -4,7 +4,7 @@
  * date: 2015/4/6
  */
 //
-//require_once 'Diff.php';
+//require_once 'diff.php';
 //require_once 'inc/*';
 
 //

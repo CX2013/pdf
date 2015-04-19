@@ -9,11 +9,13 @@ class FileUtil {
 
     const READ_MODE = 'r';
     private $fileName;
+    private $encoding;
 
     private $fileReader;
 
-    function  __construct($fileName) {
+    function  __construct($fileName, $encoding = 'utf8') {
         $this->fileName = $fileName;
+        $this->encoding = $encoding;
     }
 
     /**
@@ -31,10 +33,28 @@ class FileUtil {
         return fgets($this->fileReader);
     }
 
-
-    static function  getExtenson($fileName) {
+    /**
+     * 获取文件的扩展名
+     * @param string $fileName
+     * @return string 扩展名
+     */
+    static function  getExtension($fileName) {
         $info = pathinfo($fileName);
 
         return $info['extension'];
     }
+
+    /**
+     * 获取文件内容
+     * @param string $fileName 文件名
+     * @return bool|string
+     */
+    static function  getFileContent($fileName) {
+        if (!file_exists($fileName)) {
+            return false;
+        }
+
+        return file_get_contents($fileName);
+    }
+
 }

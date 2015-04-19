@@ -20,7 +20,7 @@ interface IFileDiffer {
      */
     function  handleDiff();
 
-    function  onError($errMsg);
+    function  onError($errMsg, $info = null);
 
     function  getResult();
 
