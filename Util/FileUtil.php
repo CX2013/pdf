@@ -7,12 +7,30 @@
  */
 class FileUtil {
 
+    /**
+     * 定义文件打开方式—只读
+     */
     const READ_MODE = 'r';
+    /**
+     * @var string 文件名
+     */
     private $fileName;
+
+    /**
+     * @var string 文件编码方式
+     */
     private $encoding;
 
+    /**
+     * @var object 读取文件的文件指针
+     */
     private $fileReader;
 
+    /**
+     * 构造函数
+     * @param string $fileName 文件名
+     * @param string $encoding 文件编码方式，默认utf8
+     */
     function  __construct($fileName, $encoding = 'utf8') {
         $this->fileName = $fileName;
         $this->encoding = $encoding;

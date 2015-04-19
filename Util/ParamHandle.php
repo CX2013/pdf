@@ -43,7 +43,6 @@ class ParamHandle {
      * 'msg'    => '',
      * 'data'   => array,
      * );
-
      */
     public static function  getParams($cmdArgv) {
         $retData = array(

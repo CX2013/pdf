@@ -1,8 +1,8 @@
 <?php
 
 /**
- * created by guozhucheng
- * date: 2015/4/11
+ *  IFileDiffer
+ *  定义接口，处理文件diff的接口描述
  */
 interface IFileDiffer {
 
@@ -20,9 +20,23 @@ interface IFileDiffer {
      */
     function  handleDiff();
 
+    /**
+     * 发生错误时触发
+     * @param string $errMsg 错误信息
+     * @param object $info 错误信息中包含的对象
+     * @return mixed
+     */
     function  onError($errMsg, $info = null);
 
+    /**
+     * 获取diff后的结果
+     * @return mixed
+     */
     function  getResult();
 
+    /**
+     * 返回是否有错误发生
+     * @return mixed
+     */
     function  isError();
 }

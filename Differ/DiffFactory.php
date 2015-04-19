@@ -4,8 +4,8 @@ require_once('XmlDiffer.php');
 require_once(__DIR__ . "/../Util/FileUtil.php");
 
 /**
- * created by guozhucheng
- * date: 2015/4/12
+ *  DiffFactory
+ *  工厂类，获取diff实例化的对象
  */
 class DiffFactory {
 
@@ -21,12 +21,12 @@ class DiffFactory {
     /**
      * 扩展名支持：json
      */
-    const  EXTENSON_SUPPORT_JSON = "json";
+    const  EXTENSION_SUPPORT_JSON = "json";
 
     /**
      * 支持diff的类型 xml
      */
-    const  EXTENSON_SUPPORT_XML = "xml";
+    const  EXTENSION_SUPPORT_XML = "xml";
 
     /**
      * 根据文件名称，通过工厂创建合适的Differ实现类
@@ -35,10 +35,10 @@ class DiffFactory {
      */
     public static function getDiffer($ext) {
         switch (strtolower($ext)) {//json
-            case self::EXTENSON_SUPPORT_JSON:
+            case self::EXTENSION_SUPPORT_JSON:
                 return new JsonDiffer();
                 break;
-            case self::EXTENSON_SUPPORT_XML:
+            case self::EXTENSION_SUPPORT_XML:
                 return new XmlDiffer();
                 break;
             default:
