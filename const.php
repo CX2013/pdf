@@ -1,7 +1,7 @@
 <?php
 /**
  * 常量定义
- * created by guozhucheng
+ * created by maxin
  * date: 2015/4/17
  */
 

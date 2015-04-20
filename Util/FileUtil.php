@@ -2,7 +2,7 @@
 
 /**
  * 文件处理辅助类
- * created by guozhucheng
+ * created by maxin
  * date: 2015/4/11
  */
 class FileUtil {

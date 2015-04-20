@@ -6,7 +6,7 @@ require_once(__DIR__ . "/../Util/XML2Array.php");
 require_once(__DIR__ . "/../const.php");
 
 /**
- * created by guozhucheng
+ * created by maxin
  * date: 2015/4/19
  */
 class XmlDiffer implements IFileDiffer {

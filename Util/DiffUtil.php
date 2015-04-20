@@ -1,7 +1,7 @@
 <?php
 
 /**
- * created by guozhucheng
+ * created by maxin
  * date: 2015/4/19
  */
 class DiffUtil {
